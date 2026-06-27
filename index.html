@@ -474,7 +474,14 @@ function showResult() {
 
 function openWA() {
   const name = document.getElementById('inp-name').value.trim() || 'un emprendedor';
-  const msg = encodeURIComponent('Hola, acabo de completar el quiz "¿Qué tan protegido está tu negocio?" y me gustaría agendar mi consulta gratuita. Mi nombre es ' + name + '.');
+ let textoMensaje = '';
+
+  if (tipo === 'networking') {
+    textoMensaje = 'Hola, me gustaría información del evento de networking. Mi nombre es ' + name + '.';
+  } else {
+    textoMensaje = 'Hola, acabo de completar el quiz "¿Qué tan protegido está tu negocio?" y me gustaría agendar mi consulta gratuita. Mi nombre es ' + name + '.';
+  }
+ const msg = encodeURIComponent(textoMensaje);
   window.open('https://wa.me/522225070688?text=' + msg, '_blank');
 }
 </script>

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz ZF Legal Studio</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -348,7 +349,18 @@
         <div class="option" onclick="select(5,2,this)"><div class="option-letter">C</div><div class="option-text">Entender si mi estructura corporativa es la correcta</div></div>
         <div class="option" onclick="select(5,3,this)"><div class="option-letter">D</div><div class="option-text">Saber si estoy expuesto a sanciones o investigaciones</div></div>
       </div>
-      <div class="nav"><button class="btn-next" id="btn-5" onclick="showResult()">Ver mis resultados →</button></div>
+      <div class="nav"><button class="btn-next" id="btn-5" onclick="goNext()">Siguiente →</button></div>
+    </div>
+
+    <div class="step" id="step-6">
+      <div class="step-label">Pregunta de ubicación</div>
+      <div class="question">¿De qué estado nos visitas?</div>
+      <div class="options" id="opts-6">
+        <div class="option" onclick="select(6,0,this)"><div class="option-letter">A</div><div class="option-text">Puebla</div></div>
+        <div class="option" onclick="select(6,1,this)"><div class="option-letter">B</div><div class="option-text">Tlaxcala</div></div>
+        <div class="option" onclick="select(6,2,this)"><div class="option-letter">C</div><div class="option-text">Oaxaca</div></div>
+      </div>
+      <div class="nav"><button class="btn-next" id="btn-6" onclick="showResult()">Ver mis resultados →</button></div>
     </div>
 
     <div class="step" id="step-result">
@@ -363,8 +375,8 @@
         <div class="result-badge-label">Próximo paso</div>
         <div class="result-badge-text">Únete al networking y agenda una consulta gratuita con nuestro equipo</div>
       </div>
-      <button class="btn-cta" onclick="openWA()">Quiero mi consulta gratuita 🎯</button>
-      <button class="btn-ghost" onclick="openWA()">Inscribirme al evento de networking</button>
+      <button class="btn-cta" onclick="openWA('cita')">Quiero mi consulta gratuita 🎯</button>
+      <button class="btn-ghost" onclick="openWA('networking')">Inscribirme al evento de networking</button>
       <p class="footer-note">Recibirás la confirmación de inscripción en tu correo y WhatsApp.<br>Sin compromisos. Tu consulta es 100% confidencial.</p>
     </div>
 
@@ -373,7 +385,7 @@
 
 <script>
 const answers = {};
-const totalSteps = 5;
+const totalSteps = 6;
 
 const profiles = [
   { icon: '🚀', title: 'Emprendedor en construcción', sub: 'Estás en la etapa más importante: arrancar bien desde el inicio. Las decisiones jurídicas que tomes ahora definirán la solidez de tu negocio a largo plazo.', service: 'Constitución de empresa + estructura societaria adecuada a tu modelo de negocio' },
@@ -416,16 +428,16 @@ function updateProgress() {
 }
 
 function showResult() {
-  // Cambiar el botón temporalmente para dar feedback visual
-  const btnResult = document.getElementById('btn-5');
-  btnResult.innerText = "Guardando diagnóstico...";
-  btnResult.disabled = true;
+  const btnResult = document.getElementById('btn-6');
+  if(btnResult) {
+    btnResult.innerText = "Guardando diagnóstico...";
+    btnResult.disabled = true;
+  }
 
-  document.getElementById('step-5').classList.remove('active');
+  document.getElementById('step-6').classList.remove('active');
   document.getElementById('step-result').classList.add('active');
   document.getElementById('progress').style.width = '100%';
 
-  // Pick profile based on Q2 (main concern) and Q5 (priority)
   const q2 = answers[2] ?? 0;
   const q5 = answers[5] ?? 0;
   let profileIdx = q2;
@@ -443,17 +455,21 @@ function showResult() {
   const phone = document.getElementById('inp-phone').value.trim();
   const email = document.getElementById('inp-email').value.trim();
 
-  // Mapear los índices numéricos a letras legibles para tu Excel
   const letterMap = { 0: 'A', 1: 'B', 2: 'C', 3: 'D' };
+  
+  // Mapeo para el nombre del Estado
+  const estadoMap = { 0: 'Puebla', 1: 'Tlaxcala', 2: 'Oaxaca' };
+  const estadoSeleccionado = estadoMap[answers[6]] ?? 'No especificado';
 
-  // CAMBIA ESTO POR TU URL REAL DE SHEETDB
-  const sheetDB_URL = "https://sheetdb.io/api/v1/dckht3p4v11xj"; 
+  // VARIABLE DE SHEETDB: PEGA TU ENLACE REAL DENTRO DE LAS COMILLAS
+  const sheetDB_URL = "https://sheetdb.io/api/v1/TU_API_KEY_AQUI"; 
 
   const payload = {
     "Fecha": new Date().toLocaleString('es-MX'),
     "Nombre": name,
     "telefono": phone,
     "correo": email,
+    "Estado": estadoSeleccionado,
     "Pregunta 1": letterMap[answers[1]] ?? '',
     "Pregunta 2": letterMap[answers[2]] ?? '',
     "Pregunta 3": letterMap[answers[3]] ?? '',
@@ -484,7 +500,6 @@ function openWA(tipo) {
   const msg = encodeURIComponent(textoMensaje);
   window.open('https://wa.me/522225070688?text=' + msg, '_blank');
 }
- 
 </script>
 </body>
 </html>
